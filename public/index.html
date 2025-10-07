@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Stock Trading Adventure</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<!-- This new class is the key to perfect centering -->
+<body class="login-page-body">
+    <div class="container">
+        <div class="login-container card">
+            <div class="icon">📈</div>
+            <h1>Stock Trading Adventure</h1>
+            <p>Welcome, future millionaire! Enter a nickname below to start your trading journey.</p>
+            <div class="login-form">
+                <input type="text" id="nickname" placeholder="Enter Your Nickname" autofocus>
+                <button id="join-game">Join the Game</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const joinGame = () => {
+            const nickname = document.getElementById('nickname').value;
+            if (nickname && nickname.trim().length > 0) {
+                localStorage.setItem('nickname', nickname.trim());
+                window.location.href = 'game.html';
+            } else {
+                alert('Please enter a valid nickname!');
+            }
+        };
+        document.getElementById('join-game').addEventListener('click', joinGame);
+        document.getElementById('nickname').addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                joinGame();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Trading Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Stock Trading Adventure</h1>
+        <div id="player-info">Welcome, <span id="player-nickname">Player</span>!</div>
+    </header>
+
+    <div id="game-status-bar">
+        <span id="round-info">Round: 1</span> | 
+        <span id="trading-status-info">Trading: OPEN</span>
+    </div>
+    <div id="news-ticker"></div>
+
+    <div class="container">
+        <!-- New Market History Chart -->
+        <div class="card history-card">
+            <h2>Market History</h2>
+            <div class="history-chart-container">
+                <canvas id="historyChart"></canvas>
+            </div>
+        </div>
+
+        <div class="game-container">
+            <div class="main-content">
+                <div id="stock-market" class="card">
+                    <h2>Stock Market</h2>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th>Price (INR)</th>
+                                    <th>Available</th>
+                                    <th>Quantity</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stock-table"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar">
+                <div id="player-portfolio" class="card">
+                    <h2>Your Portfolio</h2>
+                    <div class="portfolio-details">
+                        <p>Cash on Hand:</p>
+                        <span id="cash-balance" class="cash-amount"></span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="portfolioChart"></canvas>
+                        <div id="empty-portfolio-message" class="empty-chart-message">
+                            Buy stocks to see your portfolio!
+                        </div>
+                    </div>
+                    <h3>Your Stocks:</h3>
+                    <ul id="owned-stocks"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>

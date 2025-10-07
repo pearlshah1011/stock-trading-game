@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Game Master Controls</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container admin-container">
+        <div class="admin-header">
+            <h1>Game Master Dashboard</h1>
+            <div id="connection-status">Connecting...</div>
+        </div>
+        <div class="admin-controls">
+            <div class="control-group card">
+                <h3>Broadcast News</h3>
+                <input type="text" id="news-message" placeholder="Type your message here...">
+                <button id="send-news" class="btn-primary">Send News</button>
+            </div>
+            <div class="control-group card">
+                <h3>Game Controls</h3>
+                <div class="game-info">
+                    <p><strong>Round:</strong> <span id="current-round">1</span></p>
+                    <p><strong>Trading Status:</strong> <span id="trading-status">OPEN</span></p>
+                </div>
+                <div class="button-group">
+                    <button id="toggle-trading-btn" class="btn-secondary">Close Trading</button>
+                    <button id="advance-round-btn" class="btn-secondary">Advance to Next Round</button>
+                    <!-- New Reset Button -->
+                    <button id="reset-game-btn" class="btn-danger">Reset Game</button>
+                </div>
+            </div>
+            <div class="control-group card">
+                <h3>Leaderboard & Player Management</h3>
+                <div class="table-wrapper">
+                    <table id="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th><th>Player</th><th>Total Value (INR)</th><th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/admin.js"></script>
+</body>
+</html>

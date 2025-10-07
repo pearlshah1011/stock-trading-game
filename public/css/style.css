@@ -1,0 +1,199 @@
+/* --- UNIVERSAL STYLES & MODERN RESET --- */
+:root {
+    --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --primary-blue: #0052D4;
+    --primary-gradient: linear-gradient(90deg, #0052D4 0%, #4364F7 50%, #6FB1FC 100%);
+    --dark-grey: #343a40;
+    --light-grey: #f8f9fa;
+    --body-bg-gradient: linear-gradient(120deg, #f1f5f8 0%, #e6eafc 100%);
+    --card-bg: #ffffff;
+    --text-dark: #212529;
+    --text-light: #6c757d;
+    --border-color: #dee2e6;
+    --green: #28a745;
+    --yellow: #ffc107;
+    --red: #dc3545;
+    --shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+    --border-radius: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+    font-family: var(--font-family);
+    background: var(--body-bg-gradient);
+    color: var(--text-dark);
+    line-height: 1.7;
+    min-height: 100vh;
+}
+
+/* --- LOGIN PAGE STYLING (CENTERING FIX) --- */
+.login-page-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login-container { max-width: 500px; text-align: center; padding: 40px 30px; }
+.login-container .icon { font-size: 4rem; margin-bottom: 1rem; }
+.login-container h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+.login-container p { color: var(--text-light); margin-bottom: 2rem; }
+.login-form { display: flex; flex-direction: column; gap: 15px; }
+.login-form button { background: var(--primary-gradient); color: white; }
+.login-form input[type="text"] {
+    font-size: 1.1rem; padding: 15px 20px; border: 1px solid var(--border-color);
+    border-radius: var(--border-radius); text-align: center; transition: all 0.2s ease;
+}
+.login-form input[type="text"]:focus {
+    border-color: var(--primary-blue); outline: none; box-shadow: 0 0 0 4px rgba(0, 82, 212, 0.15);
+}-primary-gradient); color: white; }
+
+/* --- GAME LAYOUT & CONTAINERS --- */
+.game-container { display: grid; grid-template-columns: 1fr; gap: 25px; margin-top: 25px; }
+@media (min-width: 992px) { .game-container { grid-template-columns: 2fr 1fr; } }
+.container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 25px 20px; }
+.admin-container { max-width: 960px; }
+
+/* --- HEADER & INFO BARS --- */
+header, #game-status-bar, #news-ticker { position: sticky; z-index: 1000; }
+header { background: var(--primary-gradient); color: white; padding: 20px; text-align: center; top: 0; }
+header h1 { font-weight: 700; font-size: 1.8rem; }
+#player-info { font-weight: 400; font-size: 1rem; opacity: 0.9; }
+#game-status-bar { background-color: var(--dark-grey); color: white; padding: 12px; font-weight: 500; text-align: center; top: 81px; }
+.status-open { color: #90ee90 !important; }
+.status-closed { color: #f08080 !important; }
+#news-ticker { background-color: var(--yellow); color: var(--text-dark); padding: 12px; font-weight: 600; text-align: center; top: 125px; }
+
+/* --- CARD STYLING --- */
+.card { background: var(--card-bg); padding: 25px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 0; }
+.card h2 { font-weight: 600; margin-bottom: 20px; }
+
+/* --- BUTTONS & FORMS --- */
+button { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; font-family: var(--font-family); transition: all 0.2s ease; }
+button:hover { transform: translateY(-2px); filter: brightness(1.1); }
+button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; filter: none; }
+.buy-btn { background-color: var(--green); color: white; }
+.sell-btn { background-color: var(--yellow); color: var(--text-dark); }
+.btn-danger { background-color: var(--red); color: white; }
+input[type="number"] { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; font-family: var(--font-family); }
+input:focus { border-color: var(--primary-blue); outline: none; box-shadow: 0 0 0 3px rgba(0, 82, 212, 0.2); }
+
+/* --- PORTFOLIO & CHARTS --- */
+.portfolio-details { display: flex; justify-content: space-between; align-items: center; background: var(--light-grey); padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+.portfolio-details p { font-weight: 500; font-size: 1.1rem; margin: 0; }
+.cash-amount { font-weight: 700; font-size: 1.3rem; color: var(--green); }
+.chart-container { position: relative; height: 250px; margin-bottom: 20px; }
+.history-chart-container { position: relative; height: 350px; }
+.empty-chart-message { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-light); text-align: center; }
+#owned-stocks { list-style: none; }
+#owned-stocks li { padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-weight: 500; }
+.empty-list { color: var(--text-light); font-style: italic; border: none; }
+
+/* --- TABLE STYLING FOR DESKTOP & TABLET --- */
+.table-wrapper { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+th { background-color: var(--light-grey); font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
+tr:hover { background-color: #f5f8ff !important; }
+
+.quantity-cell input { max-width: 120px; }
+.actions-cell .buy-sell-wrapper { display: flex; gap: 5px; }
+.actions-cell button { width: 80px; }
+
+/* --- PRICE CHANGE INDICATORS & ARROW FIX --- */
+.price-cell { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.price-up span { color: var(--green); }
+.price-down span { color: var(--red); }
+.price-same span { color: var(--text-light); }
+.arrow-up, .arrow-down { width: 20px; height: 20px; }
+.arrow-up { fill: var(--green); }
+.arrow-down { fill: var(--red); }
+
+/* --- ADMIN DASHBOARD --- */
+.admin-container { max-width: 960px; }
+/* ... (rest of admin styles are fine and unchanged) */
+/* --- ADMIN DASHBOARD --- */
+.admin-container { max-width: 960px; }
+.admin-header { text-align: center; margin-bottom: 30px; }
+.admin-header h1 { font-size: 2.2rem; }
+#connection-status { font-weight: 500; color: var(--green); }
+.admin-controls .control-group { padding: 30px; display: flex; flex-direction: column; gap: 15px; }
+.admin-controls .btn-primary { background-color: var(--primary-blue); color: white; }
+.admin-controls .btn-secondary { background-color: var(--dark-grey); color: white; }
+.admin-controls .button-group { display: flex; flex-direction: column; gap: 10px; }
+@media (min-width: 768px) { .admin-controls .button-group { flex-direction: row; } }
+
+/* =================================================================== */
+/* ---               MOBILE RESPONSIVE OVERHAUL                    --- */
+/* =================================================================== */
+@media (max-width: 767px) {
+    /* Hide the table header on mobile */
+    #stock-market table thead {
+        display: none;
+    }
+
+    /* Make table elements block-level */
+    #stock-market table, 
+    #stock-market table tbody, 
+    #stock-market table tr {
+        display: block;
+    }
+
+    /* Style each row like a distinct card */
+    #stock-market table tr {
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        margin-bottom: 20px;
+        padding: 15px;
+    }
+    
+    /* Style each cell as a labeled row */
+    #stock-market table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    #stock-market table tr td:last-child {
+        border-bottom: none; /* No line under the last item in a card */
+    }
+
+    /* Add labels using pseudo-elements */
+    #stock-market table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        padding-right: 10px;
+        color: var(--text-dark);
+    }
+    
+    /* Stack the Quantity and Actions items vertically as requested */
+    .quantity-cell, .actions-cell {
+        display: block; /* Override flex to allow stacking */
+        padding-top: 10px;
+    }
+    .quantity-cell::before, .actions-cell::before {
+        margin-bottom: 10px; /* Space between label and control */
+        display: block;
+    }
+    .quantity-cell input {
+        width: 100%; /* Make input full-width */
+    }
+    .actions-cell .buy-sell-wrapper {
+        display: flex;
+        gap: 10px;
+    }
+    .actions-cell button {
+        flex-grow: 1; /* Make buttons share space equally */
+    }
+    
+    /* Make headers more compact on small screens */
+    header { padding: 15px; }
+    header h1 { font-size: 1.5rem; }
+    #game-status-bar { padding: 10px; top: 69px; font-size: 0.9rem; }
+    #news-ticker { padding: 10px; top: 105px; font-size: 0.9rem; }
+    
+    /* Adjust container padding */
+    .container { padding: 15px 10px; }
+    .card { padding: 20px 15px; }
+    .card h2 { font-size: 1.2rem; }
+}
