@@ -1,0 +1,14 @@
+{
+  "name": "stock-trading-game-with-admin",
+  "version": "1.0.0",
+  "description": "A fun stock trading game for children with an admin panel.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.11.0",
+    "xlsx": "^0.18.5"
+  }
+}
