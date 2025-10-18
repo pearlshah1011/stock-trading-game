@@ -1,44 +1,88 @@
+<!-- public/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome - Stock Trading Adventure</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <title>Select Your Player</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --red: #d9534f;
+            --blue: #0275d8;
+            --green: #5cb85c;
+            --yellow: #f0ad4e;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+        .player-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .player-btn {
+            padding: 20px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .player-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        #red-btn { background-color: var(--red); }
+        #blue-btn { background-color: var(--blue); }
+        #green-btn { background-color: var(--green); }
+        #yellow-btn { background-color: var(--yellow); }
+    </style>
 </head>
-<!-- This new class is the key to perfect centering -->
-<body class="login-page-body">
+<body>
     <div class="container">
-        <div class="login-container card">
-            <div class="icon">📈</div>
-            <h1>Stock Trading Adventure</h1>
-            <p>Welcome, future millionaire! Enter a nickname below to start your trading journey.</p>
-            <div class="login-form">
-                <input type="text" id="nickname" placeholder="Enter Your Nickname" autofocus>
-                <button id="join-game">Join the Game</button>
-            </div>
+        <h1>Choose Your Player</h1>
+        <div class="player-selection">
+            <button id="red-btn" class="player-btn" data-color="Red">Red</button>
+            <button id="blue-btn" class="player-btn" data-color="Blue">Blue</button>
+            <button id="green-btn" class="player-btn" data-color="Green">Green</button>
+            <button id="yellow-btn" class="player-btn" data-color="Yellow">Yellow</button>
         </div>
     </div>
 
     <script>
-        const joinGame = () => {
-            const nickname = document.getElementById('nickname').value;
-            if (nickname && nickname.trim().length > 0) {
-                localStorage.setItem('nickname', nickname.trim());
+        document.querySelectorAll('.player-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const color = button.dataset.color;
+                // Save the chosen color to local storage
+                localStorage.setItem('playerColor', color);
+                // Redirect to the game page
                 window.location.href = 'game.html';
-            } else {
-                alert('Please enter a valid nickname!');
-            }
-        };
-        document.getElementById('join-game').addEventListener('click', joinGame);
-        document.getElementById('nickname').addEventListener('keypress', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                joinGame();
-            }
+            });
         });
     </script>
 </body>

@@ -1,11 +1,15 @@
+// public/main.js
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- SETUP ---
-    const nickname = localStorage.getItem('nickname');
-    if (!nickname && window.location.pathname.includes('game.html')) {
+    const playerColor = localStorage.getItem('playerColor');
+    if (!playerColor) {
+        // If no player color is chosen, send them back to the selection screen
         window.location.href = 'index.html';
         return;
     }
-    document.getElementById('player-nickname').textContent = nickname;
+    document.getElementById('player-nickname').textContent = playerColor;
+    document.body.classList.add(`theme-${playerColor.toLowerCase()}`); // Optional: for styling
 
     // Chart.js Instances
     const portfolioCtx = document.getElementById('portfolioChart').getContext('2d');
@@ -17,18 +21,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const host = window.location.host;
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const ws = new WebSocket(`${protocol}//${host}`);
-    let myPlayerId = null;
+    
+    // --- MODIFICATION: Claim player on connect ---
+    ws.onopen = () => ws.send(JSON.stringify({ type: 'claim_player', playerColor: playerColor }));
 
-    ws.onopen = () => ws.send(JSON.stringify({ type: 'register', nickname }));
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         switch (data.type) {
-            case 'registered': myPlayerId = data.playerId; break;
+            case 'claimed': console.log(`Successfully claimed player: ${data.playerColor}`); break;
             case 'update': updateGameState(data); break;
             case 'error':
             case 'kicked':
             case 'game_over':
                 alert(data.message);
+                localStorage.removeItem('playerColor'); // Clear player choice
                 window.location.href = 'index.html';
                 break;
         }
@@ -41,8 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- UI UPDATE FUNCTIONS ---
     function updateGameState(gameState) {
-        if (!myPlayerId || !gameState.players[myPlayerId]) return;
-        const myPlayer = gameState.players[myPlayerId];
+        // --- MODIFICATION: Find player by color ---
+        const myPlayer = gameState.players[playerColor];
+        if (!myPlayer) return;
+
         updateStockTable(gameState.stockData, gameState.gameSettings.tradingOpen, myPlayer.portfolio);
         updatePortfolio(myPlayer, gameState.stockData);
         updateGameStatus(gameState.gameSettings);
@@ -99,9 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             tableBody.appendChild(row);
 
-            // --- THIS IS THE CORRECTED PART ---
-            // Event listeners are now simplified and directly use the 'stock' object
-            // from the forEach loop's scope, which is reliable.
             const quantityInput = row.querySelector('.quantity-input');
             
             row.querySelector('.buy-btn').addEventListener('click', () => {
@@ -119,7 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     quantityInput.value = '';
                 }
             });
-            // --- END OF FIX ---
         });
     }
 
