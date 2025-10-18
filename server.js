@@ -1,3 +1,5 @@
+// server.js
+
 const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
@@ -10,14 +12,25 @@ const wss = new WebSocket.Server({ server });
 
 app.use(express.static('public'));
 
-let players = {};
 let gameSettings = {
     initialCash: 1000000,
-    maxPlayers: 20,
+    maxPlayers: 4, // Fixed at 4
     currentRound: 1,
     tradingOpen: true,
     currentNews: "Welcome to the Stock Trading Adventure! A new game is starting."
 };
+
+// --- MODIFICATION: Hardcoded players ---
+function initializePlayers() {
+    return {
+        "Red": { id: "Red", nickname: "Red", cash: gameSettings.initialCash, portfolio: {}, activeConnection: false },
+        "Blue": { id: "Blue", nickname: "Blue", cash: gameSettings.initialCash, portfolio: {}, activeConnection: false },
+        "Green": { id: "Green", nickname: "Green", cash: gameSettings.initialCash, portfolio: {}, activeConnection: false },
+        "Yellow": { id: "Yellow", nickname: "Yellow", cash: gameSettings.initialCash, portfolio: {}, activeConnection: false }
+    };
+}
+let players = initializePlayers();
+// ------------------------------------
 
 let fullStockData = [];
 let activeStockData = [];
@@ -54,12 +67,10 @@ function loadStockDataFromExcel() {
 
 function updateActiveStockDataForRound(round) {
     const roundIndex = round - 1;
-    // If resetting the game, ensure we use the initial quantities
-    const sourceData = activeStockData.length === 0 ? fullStockData : activeStockData;
-
     activeStockData = fullStockData.map(stock => {
-        const currentStock = sourceData.find(s => s.name === stock.name);
-        const quantity = currentStock ? (currentStock.quantity !== undefined ? currentStock.quantity : stock.initialQuantity) : stock.initialQuantity;
+        // Find the current stock to preserve its quantity across rounds
+        const currentStock = activeStockData.find(s => s.name === stock.name);
+        const quantity = currentStock ? currentStock.quantity : stock.initialQuantity;
         return {
             name: stock.name,
             price: stock.prices[roundIndex] || 0,
@@ -90,8 +101,10 @@ wss.on('connection', (ws) => {
         if (ws.isAdmin) {
             adminWs = null;
             console.log('Game Master disconnected.');
-        } else if (ws.id) {
-            delete players[ws.id];
+        } else if (ws.id && players[ws.id]) {
+            // --- MODIFICATION: Mark player as disconnected ---
+            console.log(`Player ${ws.id} disconnected.`);
+            players[ws.id].activeConnection = false;
             broadcastGameState();
         }
     });
@@ -99,7 +112,22 @@ wss.on('connection', (ws) => {
 
 function handlePlayerCommands(ws, data) {
     switch (data.type) {
-        case 'register': registerPlayer(ws, data.nickname); break;
+        // --- MODIFICATION: New player claim logic ---
+        case 'claim_player':
+            const playerColor = data.playerColor;
+            if (players[playerColor]) {
+                if (players[playerColor].activeConnection) {
+                    ws.send(JSON.stringify({ type: 'error', message: `Player ${playerColor} is already in the game.` }));
+                    ws.close();
+                } else {
+                    ws.id = playerColor; // The player's ID is their color
+                    players[playerColor].activeConnection = true;
+                    console.log(`Player ${playerColor} has connected.`);
+                    ws.send(JSON.stringify({ type: 'claimed', playerColor: playerColor }));
+                    broadcastGameState();
+                }
+            }
+            break;
         case 'buy': if (gameSettings.tradingOpen) handleBuy(ws.id, data.stockName, data.quantity); break;
         case 'sell': if (gameSettings.tradingOpen) handleSell(ws.id, data.stockName, data.quantity); break;
     }
@@ -118,50 +146,23 @@ function handleAdminCommands(data) {
             gameSettings.tradingOpen = true;
             gameSettings.currentNews = `--- Round ${gameSettings.currentRound} has begun! ---`;
             break;
-        case 'delete_player':
-            const playerToDelete = Object.values(players).find(p => p.nickname === data.nickname);
-            if (playerToDelete) {
-                wss.clients.forEach(client => {
-                    if (client.id === playerToDelete.id) {
-                        client.send(JSON.stringify({ type: 'kicked', message: 'The Game Master has removed you from the game.' }));
-                        client.close();
-                    }
-                });
-                delete players[playerToDelete.id];
-            }
-            break;
-        // --- NEW FEATURE: Reset Game Logic ---
+        // --- MODIFICATION: Reset Game now resets hardcoded players ---
         case 'reset_game':
-            // Notify all players that the game is ending
             wss.clients.forEach(client => {
                 if (client.readyState === WebSocket.OPEN && !client.isAdmin) {
-                    client.send(JSON.stringify({ type: 'game_over', message: 'The Game Master has ended the game. You will be returned to the main screen.' }));
+                    client.send(JSON.stringify({ type: 'game_over', message: 'The Game Master has ended the game. Please choose a player again.' }));
                     client.close();
                 }
             });
-            // Reset all game state variables
-            players = {};
+            players = initializePlayers(); // Reset to initial state
             gameSettings.currentRound = 1;
             gameSettings.tradingOpen = true;
             gameSettings.currentNews = "Welcome! A new game is starting.";
-            // Force a full reset of stock quantities
-            activeStockData = [];
+            activeStockData = []; // Clear stock quantities
             updateActiveStockDataForRound(1);
             break;
+        // NOTE: 'delete_player' is removed as players are now fixed.
     }
-    broadcastGameState();
-}
-
-function registerPlayer(ws, nickname) {
-    if (Object.values(players).some(p => p.nickname === nickname)) {
-        ws.send(JSON.stringify({ type: 'error', message: 'This nickname is already taken.' }));
-        ws.close();
-        return;
-    }
-    const playerId = Date.now().toString();
-    ws.id = playerId;
-    players[playerId] = { id: playerId, nickname, cash: gameSettings.initialCash, portfolio: {} };
-    ws.send(JSON.stringify({ type: 'registered', playerId }));
     broadcastGameState();
 }
 
